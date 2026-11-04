@@ -1,0 +1,125 @@
+/* "My Profile" tab with dashed underline */
+.tab {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 12px 8px;
+  border-bottom: 1px dashed var(--color-graphics-black);
+  font-size: var(--size-md);
+  font-weight: var(--font-regular);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.panel {
+  background: var(--color-bg-neutral);
+  min-width: 0;
+}
+.pad16 { padding: 16px; }
+.pad24 { padding: 24px; }
+.padHeader { padding: 16px 24px; }
+
+/* Grey strip headers: "Overall Shipment Info", "Total Products: 3" */
+.strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: var(--color-graphics-gray-extrasubtle);
+  font-size: var(--size-md);
+  color: var(--color-text-primary);
+  min-width: 0;
+}
+.strip > :first-child { white-space: nowrap; }
+
+.divider {
+  height: 0;
+  border: 0;
+  border-top: 1px solid var(--color-graphics-gray-subtle);
+  margin: 0;
+  width: 100%;
+}
+
+.title {
+  font-weight: var(--font-bold);
+  font-size: var(--size-lg);
+  line-height: var(--line-height-lg);
+  color: var(--color-text-primary);
+}
+
+.titleCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  margin-left: 8px;
+  padding: 0 7px;
+  border-radius: 10px;
+  background: var(--color-bg-neutral-hover);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-medium);
+  font-size: var(--size-xs);
+  line-height: 1;
+  vertical-align: 3px;
+  font-variant-numeric: tabular-nums;
+  animation: countIn var(--duration-slow) var(--ease-out) both;
+}
+@keyframes countIn { from { opacity: 0; transform: translateY(2px); } }
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 2px;
+  font-size: var(--size-2xs);
+  line-height: var(--line-height-xs);
+  letter-spacing: 0.055px;
+}
+.crumbLink {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-brand);
+}
+.crumbLink:hover span { text-decoration: underline; }
+.crumbCurrent { color: var(--color-text-primary); }
+
+.skeleton {
+  display: block;
+  border-radius: var(--radius-xs);
+  background: linear-gradient(90deg, #f1f3f4 0%, #e6eaec 50%, #f1f3f4 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 24px;
+  text-align: center;
+  background: var(--color-bg-neutral);
+  width: 100%;
+}
+.stateTitle { font-weight: var(--font-semibold); font-size: var(--size-md); }
+.stateBody { font-size: var(--size-sm); color: var(--color-text-secondary); max-width: 360px; }
+
+/* Keep the count pill on the same line as the title */
+.title:has(.titleCount) { display: inline-flex; align-items: center; white-space: nowrap; }
+@media (max-width: 767px) {
+  .title:has(.titleCount) { font-size: 18px; }
+  .titleCount { margin-left: 6px; }
+  .sectionTitle { gap: 6px; min-width: 0; }
+  .sectionTitle > img { width: 20px !important; height: 20px !important; }
+}

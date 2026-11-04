@@ -1,0 +1,52 @@
+/* Shared page-level layout primitives */
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.stack24 { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+
+.formGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; row-gap: 16px; }
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding-top: 4px;
+  animation: in var(--duration-base) var(--ease-out);
+}
+.actionsNote { margin-right: auto; font-size: var(--size-xs); color: var(--color-text-secondary); }
+.divider { border: 0; border-top: 1px solid var(--color-graphics-gray-subtle); margin: 0; }
+
+.twoCol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+
+/* Detail pages: 588 / 390 split in the 994px content area */
+.detailGrid { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 16px; align-items: start; }
+.detailGridWide { grid-template-columns: minmax(0, 1fr) 324px; }
+.aside { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+@media (max-width: 1100px) {
+  .detailGrid, .detailGridWide { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  .formGrid, .twoCol { grid-template-columns: minmax(0, 1fr); }
+  .stack24 { gap: 20px; }
+  .actions { position: sticky; bottom: calc(var(--mobile-nav-height) + 8px); background: var(--color-bg-centerstage); padding: 8px 0; z-index: 5; }
+  .actionsNote { display: none; }
+  .actions > * { flex: 1; }
+}
+@keyframes in { from { opacity: 0; transform: translateY(-4px); } }
+
+/* Section tab with a trailing action (e.g. "Add New Address") */
+.tabRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.tabRow > button { margin-bottom: 6px; }
+
+/* Delete-confirmation preview */
+.confirmBody { display: flex; flex-direction: column; gap: 12px; }
+.confirmPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: var(--color-graphics-gray-extrasubtle);
+  border: 1px solid var(--color-graphics-gray-subtle);
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+.confirmName { display: flex; align-items: center; gap: 8px; font-weight: var(--font-semibold); color: var(--color-text-primary); }

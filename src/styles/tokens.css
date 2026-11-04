@@ -1,0 +1,97 @@
+/*
+ * Design tokens — mirrored 1:1 from the Figma variables of
+ * "Shopify - Account Page (urturms) Design". Names follow the Figma
+ * collection paths (background/…, text/…, graphics/…, border/…, icon/…).
+ */
+:root {
+  /* Typography */
+  --font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  --size-2xs: 11px;
+  --size-xs: 12px;
+  --size-sm: 14px;
+  --size-md: 16px;
+  --size-lg: 20px;
+  --size-xl: 24px;
+
+  --line-height-xs: 16px;
+  --line-height-sm: 20px;
+  --line-height-lg: 28px;
+
+  /* Background */
+  --color-bg-centerstage: #fafafa;
+  --color-bg-neutral: #ffffff;
+  --color-bg-neutral-hover: #eceff1;
+  --color-bg-success-subtle: #ebfff2;
+  --color-bg-warning-subtle: #fffad6;
+  --color-bg-danger-subtle: rgba(229, 55, 38, 0.1);
+  --color-bg-inverse: #252525;
+
+  /* Text */
+  --color-text-primary: #252525;
+  --color-text-secondary: #465a64;
+  --color-text-invert: #ffffff;
+  --color-text-brand: #e53726;
+
+  /* Graphics */
+  --color-graphics-black: #252525;
+  --color-graphics-gray-subtle: #eceff1;
+  --color-graphics-gray-narrow: #cfd8dc;
+  --color-graphics-gray-extrasubtle: #fafafa;
+  --color-graphics-success-semibold: #0e8c3a;
+  --color-graphics-success-extrasubtle: #ebfff2;
+
+  /* Border */
+  --color-border-success-bold: #0e8c3a;
+  --color-border-warning-bold: #edd434;
+  --color-border-danger-bold: #e53726;
+
+  /* Icon */
+  --color-icon-neutral-bold: #212b30;
+  --color-icon-neutral-medium: #556e7a;
+  --color-icon-neutral-subtle: #79909c;
+
+  /* Brand (urturms.com storefront) */
+  --color-brand: #e53726;
+  --color-brand-hover: #c92c1d;
+  --color-grey-14: #232322;   /* Tuatara */
+  --color-grey-20: #333333;   /* Mine Shaft */
+  --color-grey-27: #454544;
+  --color-grey-45: #737372;
+  --color-grey-56: #8f8f8e;
+  --color-grey-59: #969696;
+  --color-grey-84: #d5d5d5;   /* Alto */
+  --color-grey-92: #ebebeb;   /* Gallery */
+  --color-grey-95: #f1f1f1;
+  --color-grey-97: #f8f8f8;
+
+  /* Radius */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* Elevation */
+  --shadow-image: 0 4px 16px 0 rgba(92, 97, 255, 0.05);
+  --shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Layout */
+  --page-max: 1280px;
+  --sidebar-width: 232px; /* profile-card sidebar */
+  --content-gap: 32px;
+  --header-height: 105px;
+  --announcement-height: 40px;
+  --mobile-header-height: 65px;
+  --mobile-nav-height: 48px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+
+  --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px rgba(229, 55, 38, 0.55);
+}

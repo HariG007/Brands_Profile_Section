@@ -1,0 +1,63 @@
+.dialog {
+  border: 0;
+  padding: 0;
+  background: var(--color-bg-neutral);
+  color: var(--color-text-primary);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  max-height: calc(100dvh - 48px);
+  overflow: hidden;
+}
+.sm { width: min(400px, calc(100vw - 32px)); }
+.md { width: min(600px, calc(100vw - 32px)); }
+.dialog::backdrop { background: rgba(35, 35, 34, 0.5); }
+.dialog[open] { animation: pop var(--duration-base) var(--ease-out); }
+
+.body { display: flex; flex-direction: column; max-height: inherit; }
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 24px 24px 0; }
+.title { font-weight: var(--font-bold); font-size: var(--size-lg); line-height: var(--line-height-lg); }
+.description { margin-top: 2px; font-size: var(--size-sm); color: var(--color-text-secondary); }
+.close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin: -4px -8px 0 0;
+  background: var(--color-grey-14);
+  flex-shrink: 0;
+}
+.close:hover { background: #000; }
+.content { padding: 12px 24px 0; font-size: var(--size-sm); color: var(--color-text-secondary); overflow-y: auto; }
+.md .content { padding-top: 20px; color: var(--color-text-primary); }
+.actions { display: flex; justify-content: flex-end; gap: 8px; padding: 20px 24px 24px; }
+.md .actions { border-top: 1px solid var(--color-graphics-gray-subtle); margin-top: 20px; padding-top: 16px; padding-bottom: 16px; }
+
+@keyframes pop { from { opacity: 0; transform: translateY(6px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes sheet { from { transform: translateY(100%); } to { transform: none; } }
+
+/* Mobile: form dialogs become a bottom sheet with a sticky, thumb-reachable footer */
+@media (max-width: 767px) {
+  /* Confirm dialogs also dock to the bottom on mobile, so the actions sit under the thumb */
+  .sm {
+    width: 100vw;
+    max-width: 100vw;
+    margin: auto 0 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .sm[open] { animation: sheet var(--duration-slow) var(--ease-out); }
+  .sm .head { padding: 20px 20px 0; }
+  .sm .content { padding: 12px 20px 0; }
+  .sm .actions { padding: 16px 20px calc(16px + env(safe-area-inset-bottom)); }
+  .md {
+    width: 100vw;
+    max-width: 100vw;
+    margin: auto 0 0;
+    max-height: 92dvh;
+    border-radius: 12px 12px 0 0;
+  }
+  .md[open] { animation: sheet var(--duration-slow) var(--ease-out); }
+  .md .head { padding: 20px 20px 0; }
+  .md .content { padding: 16px 20px 0; }
+  .md .actions { padding: 12px 20px calc(12px + env(safe-area-inset-bottom)); }
+  .md .actions > * { flex: 1; }
+  .sm .actions > * { flex: 1; }
+}

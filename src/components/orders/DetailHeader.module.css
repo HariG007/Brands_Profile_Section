@@ -1,0 +1,18 @@
+.header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 16px 24px; background: var(--color-bg-neutral); }
+.left { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1 1 auto; }
+.titleRow { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.back { display: inline-flex; flex-shrink: 0; border-radius: 50%; }
+.back:hover { background: var(--color-bg-neutral-hover); }
+.title { font-weight: var(--font-bold); font-size: var(--size-lg); line-height: var(--line-height-lg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.copy { display: inline-flex; padding: 2px; margin-left: 4px; border-radius: var(--radius-xs); }
+.copy:hover { background: var(--color-bg-neutral-hover); }
+.actions { display: flex; gap: 8px; flex-shrink: 0; }
+.mobileActions { display: none; }
+
+@media (max-width: 767px) {
+  .header { padding: 16px; }
+  .title { font-size: 20px; }
+  .stackActions .actions { display: none; }
+  .mobileActions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 16px; background: var(--color-bg-neutral); }
+  .mobileActions > :only-child { grid-column: 1 / -1; }
+}

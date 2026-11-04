@@ -1,0 +1,52 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 24px 0;
+  background: var(--color-bg-neutral);
+  min-width: 0;
+  height: 100%;
+  border: 1px solid transparent;
+  transition: border-color var(--duration-base) var(--ease-out), opacity var(--duration-base) var(--ease-out);
+}
+.card:hover { border-color: var(--color-graphics-gray-subtle); }
+.busy { opacity: 0.55; pointer-events: none; }
+.head { display: flex; flex-direction: column; gap: 4px; }
+.row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.badges { display: inline-flex; gap: 6px; flex-shrink: 0; }
+.line { display: flex; align-items: center; gap: 8px; font-size: var(--size-md); color: var(--color-text-primary); min-width: 0; }
+.line span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.address { font-size: var(--size-sm); color: var(--color-text-secondary); overflow-wrap: anywhere; flex: 1 0 auto; }
+
+/* Subtle action row: text buttons, separated by hairlines */
+.actions {
+  display: flex;
+  align-items: center;
+  margin: 4px -24px 0;
+  padding: 0 12px;
+  border-top: 1px solid var(--color-graphics-gray-subtle);
+}
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 12px;
+  font-size: var(--size-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.action + .action { border-left: 1px solid var(--color-graphics-gray-subtle); }
+.action:hover { color: var(--color-text-primary); text-decoration: underline; text-underline-offset: 3px; }
+.danger:hover { color: var(--color-brand); }
+.push { margin-left: auto; border-left: 0 !important; }
+.defaultNote { margin-left: auto; padding: 0 12px; font-size: var(--size-xs); color: var(--color-text-secondary); }
+
+@media (max-width: 767px) {
+  .card { padding: 20px 20px 0; }
+  .actions { margin: 4px -20px 0; padding: 0; }
+  .action { flex: 1; justify-content: center; padding: 0 8px; }
+  .push { margin-left: 0; border-left: 1px solid var(--color-graphics-gray-subtle) !important; }
+  .defaultNote { display: none; }
+}

@@ -1,0 +1,81 @@
+.footer { background: var(--color-bg-neutral); margin-top: 32px; }
+
+.treasures { max-width: var(--page-max); margin: 0 auto; padding: 40px 20px; display: flex; flex-direction: column; gap: 40px; }
+.eyebrow { font-size: 10px; line-height: 14px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--color-grey-45); }
+.heading { margin-top: 16px; font-weight: var(--font-bold); font-size: 24px; line-height: 33.6px; letter-spacing: 0.96px; text-transform: uppercase; color: var(--color-grey-14); }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--color-grey-14);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-slow) var(--ease-out); }
+.tile:hover img { transform: scale(1.03); }
+.tile::after { content: ''; position: absolute; inset: 40% 0 0 0; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.79) 100%); }
+.tileTitle { position: relative; z-index: 1; padding: 32px; font-weight: var(--font-bold); font-size: 16px; line-height: 22.4px; letter-spacing: 0.64px; text-transform: uppercase; color: #fff; }
+
+.main { border-top: 1px solid var(--color-grey-84); border-bottom: 1px solid var(--color-grey-84); }
+.columns {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 64px 20px;
+  display: grid;
+  grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)) 1.6fr;
+  gap: 32px;
+}
+.about { display: flex; flex-direction: column; gap: 16px; font-size: 12px; line-height: 17px; color: var(--color-grey-27); }
+.about img { width: 160px; height: auto; }
+.colTitle { font-weight: var(--font-bold); font-size: 12px; line-height: 17px; text-transform: uppercase; color: var(--color-grey-14); margin-bottom: 16px; }
+.links { display: flex; flex-direction: column; gap: 10px; font-size: 12px; color: var(--color-grey-59); }
+.links a:hover { color: var(--color-grey-14); }
+.social { display: inline-flex; align-items: center; gap: 10px; }
+
+.newsTitle { font-weight: var(--font-bold); font-size: 14px; text-transform: uppercase; color: var(--color-grey-14); margin-bottom: 12px; }
+.newsBody { font-size: 12px; line-height: 17px; color: var(--color-grey-56); margin-bottom: 16px; }
+.form { display: flex; gap: 4px; }
+.email {
+  flex: 1;
+  min-width: 0;
+  height: 60px;
+  padding: 0 16px;
+  background: var(--color-grey-97);
+  border: 1px solid var(--color-grey-92);
+  font-size: 13px;
+}
+.email:focus { outline: none; border-color: var(--color-grey-14); }
+.subscribe {
+  height: 60px;
+  padding: 0 24px;
+  background: var(--color-grey-14);
+  color: #fff;
+  font-weight: var(--font-bold);
+  font-size: 15px;
+  letter-spacing: -0.15px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.formMsg { margin-top: 8px; font-size: 12px; color: var(--color-graphics-success-semibold); }
+.formErr { color: var(--color-brand); }
+
+.bottom { max-width: var(--page-max); margin: 0 auto; padding: 24px 20px; display: flex; justify-content: flex-end; font-size: 12px; color: var(--color-grey-56); }
+.searches { background: var(--color-grey-95); }
+.searchesInner { max-width: var(--page-max); margin: 0 auto; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--color-grey-27); }
+.searchesToggle { font-size: 10px; color: var(--color-grey-20); }
+.searchList { max-width: var(--page-max); margin: 0 auto; padding: 0 20px 12px; font-size: 10px; color: var(--color-grey-47, #777); line-height: 16px; }
+
+@media (max-width: 1023px) {
+  .columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .about, .newsletter { grid-column: 1 / -1; }
+}
+@media (max-width: 767px) {
+  .footer { margin-top: 24px; padding-bottom: var(--mobile-nav-height); }
+  .treasures { padding: 32px 20px; gap: 24px; }
+  .tiles { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; margin: 0 -20px; padding: 0 20px; scrollbar-width: none; }
+  .tiles::-webkit-scrollbar { display: none; }
+  .tile { flex: 0 0 78%; scroll-snap-align: start; }
+  .columns { padding: 40px 20px; gap: 28px; }
+  .bottom { justify-content: center; }
+}

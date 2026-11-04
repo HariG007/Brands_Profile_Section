@@ -1,0 +1,133 @@
+/* Shared ------------------------------------------------------------ */
+.root { display: flex; flex-direction: column; gap: 16px; width: 100%; animation: in var(--duration-slow) var(--ease-out); }
+@keyframes in { from { opacity: 0; transform: translateX(-6px); } }
+
+.back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 4px;
+  font-size: var(--size-md);
+  line-height: var(--line-height-sm);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+.back:hover span { text-decoration: underline; text-underline-offset: 3px; }
+
+.label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 10px;
+  background: var(--color-bg-neutral-hover);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-medium);
+  font-size: var(--size-xs);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-grey-14);
+  color: var(--color-text-invert);
+  font-weight: var(--font-semibold);
+  font-size: var(--size-md);
+  letter-spacing: 0.5px;
+}
+
+
+/* Profile card + joined menu -------------------------------------------- */
+.profileCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-bg-neutral);
+  border: 1px solid transparent;
+  transition: border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+.profileCard:hover, .profileCard:focus-visible { border-color: var(--color-graphics-gray-subtle); box-shadow: 0 6px 18px rgba(35, 35, 34, 0.06); }
+.identityFull { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* Full name, email and phone always shown in full — wrap instead of truncating */
+.nameFull { font-weight: var(--font-semibold); font-size: var(--size-md); line-height: 1.3; overflow-wrap: anywhere; color: var(--color-text-primary); }
+.emailFull { font-size: var(--size-sm); line-height: 1.35; color: var(--color-text-secondary); overflow-wrap: anywhere; }
+
+/* Avatar → pencil on hover */
+.avatarEdit { position: relative; display: inline-grid; width: 44px; height: 44px; }
+.avatarEdit > * { grid-area: 1 / 1; }
+.avatarPencil {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  /* Subtle: soft grey disc with a dark pencil (no vibrant red) */
+  background: var(--color-bg-neutral-hover);
+  box-shadow: inset 0 0 0 1px var(--color-graphics-gray-narrow);
+  opacity: 0;
+  transform: scale(0.85) rotate(-20deg);
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-slow) cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.profileCard:hover .avatarPencil, .profileCard:focus-visible .avatarPencil { opacity: 1; transform: none; }
+
+.menu { display: flex; flex-direction: column; background: var(--color-bg-neutral); }
+.menuItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 16px;
+  font-size: var(--size-md);
+  color: var(--color-text-secondary);
+  text-align: left;
+  width: 100%;
+  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.menu > .menuItem + .menuItem { border-top: 1px solid var(--color-graphics-gray-subtle); }
+.menuItem:hover { background: var(--color-graphics-gray-extrasubtle); }
+/* Selected: stays white — identified by darker text/icon, medium weight and the red nudge */
+.menuItem[aria-current='page'],
+.menuItem[aria-current='page']:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-neutral);
+  font-weight: var(--font-medium);
+}
+.menuSliding { position: relative; }
+.nudge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--color-brand);
+  border-radius: 0 4px 4px 0;
+  box-shadow: 2px 0 10px rgba(229, 55, 38, 0.35);
+}
+/* Slides between items with a little overshoot */
+.nudgeAnimated {
+  transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), height 240ms var(--ease-out);
+}
+/* Selected row gets a faint red wash that fades out from the nudge */
+.menuItem[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(229, 55, 38, 0.07) 0%, rgba(229, 55, 38, 0) 55%);
+  pointer-events: none;
+  animation: washIn 360ms var(--ease-out);
+}
+@keyframes washIn { from { opacity: 0; } }
+.logoutRow { background: var(--color-bg-neutral); }
+.logout { color: var(--color-brand); }
+.logout:hover { color: var(--color-brand); }
