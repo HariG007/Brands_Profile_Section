@@ -52,8 +52,33 @@ export interface Product {
   url: string;
 }
 
-/** Shipment (fulfillment) status for a line item. */
-export type ShipmentStatus = 'delivered' | 'failed' | 'in_transit';
+/**
+ * Shipment (fulfillment) status for a line item, in journey order:
+ * packed → in_transit → out_for_delivery → delivered | failed,
+ * plus cancelled, and after delivery return_in_progress → refunded.
+ */
+export type ShipmentStatus =
+  | 'packed'
+  | 'in_transit'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'failed'
+  | 'cancelled'
+  | 'return_in_progress'
+  | 'refunded';
+
+/** Return request on a delivered item (Shopify: Return + reverse fulfillment). */
+export interface ReturnInfo {
+  /** ISO date-time */
+  requestedAt: string;
+  /** Courier pickup date. ISO date. */
+  pickupDate: string;
+  /** ISO date-time, once the courier has collected it. */
+  pickedUpAt?: string;
+  /** ISO date-time, once the refund has been issued. */
+  refundedAt?: string;
+  refundAmount: number;
+}
 
 export interface TrackingEvent {
   id: string;
@@ -66,13 +91,15 @@ export interface TrackingEvent {
 }
 
 export interface Shipment {
-  awb: string;
+  /** Courier AWB, assigned once the item is packed. */
+  awb?: string;
   status: ShipmentStatus;
-  /** Delivered date (delivered) or attempted date (failed). ISO date. */
+  /** Delivered (delivered/return/refunded), attempted (failed) or cancelled date. ISO date. */
   statusDate?: string;
   /** Estimated delivery date for in-transit shipments. ISO date. */
   estimatedDelivery?: string;
   failureReason?: string;
+  return?: ReturnInfo;
   /** Latest event first. */
   events: TrackingEvent[];
 }
@@ -88,7 +115,6 @@ export interface LineItem {
   shipment: Shipment | null;
   /** 0 = not rated yet. */
   rating: number;
-  returnRequested?: boolean;
 }
 
 export interface OrderSummary {

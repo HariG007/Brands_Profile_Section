@@ -7,7 +7,22 @@
 .address { display: flex; flex-direction: column; gap: 8px; font-size: var(--size-sm); color: var(--color-text-secondary); min-width: 0; overflow-wrap: anywhere; }
 
 .summary { display: flex; flex-direction: column; gap: 16px; }
-.summaryHead { font-weight: var(--font-regular); padding: 4px 8px; background: var(--color-graphics-gray-extrasubtle); font-size: var(--size-md); color: var(--color-text-secondary); }
+.summaryHead { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: var(--font-regular); padding: 4px 4px 4px 8px; background: var(--color-graphics-gray-extrasubtle); font-size: var(--size-md); color: var(--color-text-secondary); }
+.summaryTitle { font: inherit; color: inherit; margin: 0; }
+/* Quiet "↓ Invoice" link in the summary header */
+.invoice {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--color-graphics-gray-subtle);
+  background: var(--color-bg-neutral);
+  font-size: var(--size-xs);
+  color: var(--color-text-primary);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+.invoice:hover { border-color: var(--color-graphics-black); }
 .summaryBody { display: flex; flex-direction: column; gap: 12px; padding: 0 8px; }
 .sumRow { display: flex; justify-content: space-between; gap: 12px; font-size: var(--size-sm); color: var(--color-text-secondary); white-space: nowrap; }
 .total { font-weight: var(--font-medium); font-size: var(--size-md); color: var(--color-text-primary); }

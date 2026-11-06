@@ -25,10 +25,16 @@ const ToastContext = createContext<Show>(() => {});
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<ToastItem[]>([]);
   const seq = useRef(0);
+  const [top, setTop] = useState<number>();
   const dismiss = useCallback((id: number) => setItems((list) => list.filter((t) => t.id !== id)), []);
   const show = useCallback<Show>(
     (message, tone = 'neutral', options = {}) => {
       const id = ++seq.current;
+      // Desktop: sit just below the site header (not over the announcement bar);
+      // once the header has scrolled away, pin near the top of the viewport.
+      const header = document.querySelector('header');
+      const desktop = window.matchMedia('(min-width: 768px)').matches;
+      setTop(desktop && header ? Math.max(16, header.getBoundingClientRect().bottom + 12) : undefined);
       setItems((list) => [...list.slice(-2), { id, message, tone, action: options.action }]);
       window.setTimeout(() => dismiss(id), options.duration ?? (options.action ? 5000 : 3200));
     },
@@ -37,7 +43,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={show}>
       {children}
-      <div className={s.region} role="status" aria-live="polite">
+      <div className={s.region} role="status" aria-live="polite" style={top !== undefined ? { top } : undefined}>
         {items.map((t) => (
           <div key={t.id} className={`${s.toast} ${s[t.tone]}`}>
             {t.tone === 'success' && <Icon name="check-circle" size={16} />}

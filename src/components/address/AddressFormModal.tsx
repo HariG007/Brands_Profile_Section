@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { locateAddress, lookupPincode, type LocateError, type PlaceGuess } from '@/data/locationService';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 import type { Address } from '@/data/types';
 import { Button } from '@/components/ui/Button';
 import { SelectField, TextField } from '@/components/ui/Field';
@@ -34,6 +36,12 @@ export function AddressFormModal({ open, address, isFirst, onClose, onSubmit }: 
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
+  const [pinState, setPinState] = useState<'idle' | 'loading' | 'found' | 'notfound'>('idle');
+  const [locating, setLocating] = useState(false);
+  const [locateMsg, setLocateMsg] = useState<string | null>(null);
+  /** Last values we filled in, so we only overwrite what the shopper hasn't typed themselves. */
+  const auto = useRef<PlaceGuess>({});
+  const isMobile = useIsMobile();
 
   // Reset every time the dialog opens.
   useEffect(() => {
@@ -42,7 +50,60 @@ export function AddressFormModal({ open, address, isFirst, onClose, onSubmit }: 
     setTouched({});
     setSubmitted(false);
     setFormError(null);
+    setPinState('idle');
+    setLocateMsg(null);
+    auto.current = {};
   }, [open, initial]);
+
+  /** Apply looked-up fields, leaving anything the shopper typed themselves untouched. */
+  const fill = (g: PlaceGuess) =>
+    setDraft((d) => {
+      const next = { ...d };
+      (['city', 'province', 'zip', 'line2'] as const).forEach((k) => {
+        const v = g[k];
+        if (v && (!d[k] || d[k] === auto.current[k])) next[k] = v;
+      });
+      auto.current = { ...auto.current, ...g };
+      return next;
+    });
+
+  // PIN-code → city + state, as soon as 6 digits are entered.
+  useEffect(() => {
+    if (!open || !/^\d{6}$/.test(draft.zip) || draft.zip === initial.zip) {
+      setPinState('idle');
+      return;
+    }
+    let live = true;
+    setPinState('loading');
+    lookupPincode(draft.zip).then((g) => {
+      if (!live) return;
+      if (g) fill(g);
+      setPinState(g ? 'found' : 'notfound');
+    });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft.zip, open]);
+
+  const locateMe = async () => {
+    setLocating(true);
+    setLocateMsg(null);
+    try {
+      const g = await locateAddress();
+      fill(g);
+      setLocateMsg('Filled from your location. Add your flat or house number.');
+      requestAnimationFrame(() => document.querySelector<HTMLInputElement>(`#${FORM_ID} [autocomplete="address-line1"]`)?.focus());
+    } catch (e) {
+      setLocateMsg(
+        (e as LocateError) === 'denied'
+          ? 'Location access is off. Allow it in your browser settings or enter the address below.'
+          : 'We couldn’t get your location. Please enter the address below.',
+      );
+    } finally {
+      setLocating(false);
+    }
+  };
 
   const errors = validateAddress(draft);
   const show = (k: keyof AddressDraft) => (touched[k] || submitted ? errors[k] : undefined);
@@ -110,6 +171,19 @@ export function AddressFormModal({ open, address, isFirst, onClose, onSubmit }: 
               {formError}
             </p>
           )}
+          {isMobile && (
+            <div className={s.full}>
+              <button type="button" className={s.locate} onClick={locateMe} disabled={locating} aria-busy={locating || undefined}>
+                <Icon name="globe-location-pin" size={18} />
+                {locating ? 'Finding your location…' : 'Use current location'}
+              </button>
+              {locateMsg && (
+                <p className={s.locateMsg} role="status">
+                  {locateMsg}
+                </p>
+              )}
+            </div>
+          )}
           <TextField
             className={s.mFull}
             label="Full Name"
@@ -162,6 +236,15 @@ export function AddressFormModal({ open, address, isFirst, onClose, onSubmit }: 
             onChange={(e) => set('zip', e.target.value.replace(/\D/g, '').slice(0, 6))}
             onBlur={blur('zip')}
             error={show('zip')}
+            hint={
+              pinState === 'loading'
+                ? 'Finding city…'
+                : pinState === 'found'
+                  ? 'City and state filled in'
+                  : pinState === 'notfound'
+                    ? 'PIN not found. Please check it.'
+                    : undefined
+            }
           />
           <TextField
             label="City"

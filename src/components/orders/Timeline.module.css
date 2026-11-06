@@ -50,3 +50,10 @@
 }
 .expanded .list { grid-template-rows: 1fr; }
 .listInner { overflow: hidden; min-height: 0; display: flex; flex-direction: column; }
+
+/* Not-yet-happened steps: hollow dot, muted copy, same rail */
+.upcoming .rail::before { background: var(--color-bg-neutral); box-shadow: inset 0 0 0 1px var(--color-icon-neutral-subtle); }
+.upcoming .rail::after { background: repeating-linear-gradient(to bottom, var(--color-graphics-gray-narrow) 0 4.4px, transparent 4.4px 13.1px); }
+.upcoming .title { color: var(--color-icon-neutral-subtle); font-weight: var(--font-medium); }
+.upcoming .lines { color: var(--color-icon-neutral-subtle); font-size: var(--size-xs); }
+.upcoming .content { gap: 4px; }

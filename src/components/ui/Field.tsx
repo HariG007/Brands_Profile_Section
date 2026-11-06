@@ -1,4 +1,4 @@
-import { useId, type InputHTMLAttributes, type SelectHTMLAttributes } from 'react';
+import { useId, type ReactNode, type InputHTMLAttributes, type SelectHTMLAttributes } from 'react';
 import { Icon } from './Icon';
 import s from './Field.module.css';
 
@@ -9,6 +9,8 @@ interface BaseProps {
   required?: boolean;
   /** Static text before the input, e.g. "+91". */
   prefix?: string;
+  /** Trailing content inside the control, e.g. a "Verified" tick. */
+  suffix?: ReactNode;
 }
 
 export function TextField({
@@ -19,6 +21,7 @@ export function TextField({
   disabled,
   className,
   prefix,
+  suffix,
   ...input
 }: BaseProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'>) {
   const id = useId();
@@ -40,6 +43,7 @@ export function TextField({
           aria-describedby={error || hint ? msgId : undefined}
           {...input}
         />
+        {suffix}
       </div>
       {(error || hint) && (
         <span id={msgId} className={error ? s.message : `${s.message} ${s.hint}`} role={error ? 'alert' : undefined}>
@@ -54,8 +58,9 @@ interface SelectProps extends BaseProps, Omit<SelectHTMLAttributes<HTMLSelectEle
   options: { value: string; label: string }[];
 }
 
-export function SelectField({ label, error, required, options, disabled, className, prefix: _prefix, ...select }: SelectProps) {
+export function SelectField({ label, error, required, options, disabled, className, prefix: _prefix, suffix: _suffix, ...select }: SelectProps) {
   void _prefix;
+  void _suffix;
   const id = useId();
   return (
     <div className={[s.field, className].filter(Boolean).join(' ')}>

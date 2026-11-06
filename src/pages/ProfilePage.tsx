@@ -11,6 +11,9 @@ import { SelectField, TextField } from '@/components/ui/Field';
 import { Modal } from '@/components/ui/Modal';
 import { ErrorState, SectionTab, Skeleton } from '@/components/ui/Surface';
 import { useToast } from '@/components/ui/Toast';
+import { Icon } from '@/components/ui/Icon';
+import { OtpModal } from '@/components/profile/OtpModal';
+import type { OtpChannel } from '@/data/accountService';
 import s from './Page.module.css';
 
 const GENDERS: { value: Gender; label: string }[] = [
@@ -69,6 +72,10 @@ export function ProfilePage() {
   const [touched, setTouched] = useState<Partial<Record<keyof FormValues, boolean>>>({});
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
+  /** Contact changes still waiting for a one-time code, in order (phone first). */
+  const [pendingOtp, setPendingOtp] = useState<{ channel: OtpChannel; target: string }[]>([]);
+  /** Brief "All changes saved" confirmation after a successful save. */
+  const [justSaved, setJustSaved] = useState(false);
 
   useEffect(() => {
     if (res.status === 'success') setValues(toForm(res.data));
@@ -98,10 +105,38 @@ export function ProfilePage() {
     setSubmitted(false);
   };
 
-  const onSubmit = async (e: FormEvent) => {
+  useEffect(() => {
+    if (!justSaved) return;
+    const t = window.setTimeout(() => setJustSaved(false), 3500);
+    return () => window.clearTimeout(t);
+  }, [justSaved]);
+  useEffect(() => {
+    if (dirty) setJustSaved(false);
+  }, [dirty]);
+
+  const phoneChanged = !!values && !!initial && normalisePhone(values.phone) !== normalisePhone(initial.phone);
+  const emailChanged = !!values && !!initial && values.email.trim().toLowerCase() !== initial.email.trim().toLowerCase();
+
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     if (!values || hasErrors) return;
+    // New sign-in / delivery contacts must be confirmed with a one-time code first.
+    const queue: { channel: OtpChannel; target: string }[] = [];
+    if (phoneChanged) queue.push({ channel: 'phone', target: normalisePhone(values.phone) });
+    if (emailChanged) queue.push({ channel: 'email', target: values.email.trim().toLowerCase() });
+    if (queue.length) setPendingOtp(queue);
+    else void save();
+  };
+
+  const onOtpVerified = () => {
+    const rest = pendingOtp.slice(1);
+    setPendingOtp(rest);
+    if (!rest.length) void save();
+  };
+
+  const save = async () => {
+    if (!values) return;
     setSaving(true);
     try {
       const updated = await accountService.updateCustomer({
@@ -115,7 +150,7 @@ export function ProfilePage() {
       res.setData(updated);
       setTouched({});
       setSubmitted(false);
-      toast('Profile updated successfully', 'success');
+      setJustSaved(true);
     } catch (err) {
       toast((err as Error).message, 'danger');
     } finally {
@@ -165,6 +200,8 @@ export function ProfilePage() {
                 onChange={(e) => set('email', e.target.value)}
                 onBlur={blur('email')}
                 error={show('email')}
+                hint={emailChanged && !show('email') ? 'We’ll send a code to verify this email' : undefined}
+                suffix={!emailChanged && <Verified />}
               />
               <TextField
                 label="Phone Number"
@@ -176,6 +213,8 @@ export function ProfilePage() {
                 onChange={(e) => set('phone', e.target.value.replace(/[^\d+\s]/g, ''))}
                 onBlur={blur('phone')}
                 error={show('phone')}
+                hint={phoneChanged && !show('phone') ? 'Used to sign in and for delivery updates. We’ll verify it with a code.' : undefined}
+                suffix={!phoneChanged && <Verified />}
                 maxLength={16}
               />
               <TextField
@@ -188,6 +227,7 @@ export function ProfilePage() {
                 onChange={(e) => set('dob', maskDate(e.target.value))}
                 onBlur={blur('dob')}
                 error={show('dob')}
+                hint="Add your birthday to get a special offer every year"
               />
               <SelectField
                 label="Gender"
@@ -198,7 +238,7 @@ export function ProfilePage() {
               />
             </div>
 
-            {dirty && (
+            {dirty ? (
               <div className={s.actions}>
                 <span className={s.actionsNote}>You have unsaved changes</span>
                 <Button variant="outline" onClick={reset} disabled={saving}>
@@ -208,6 +248,15 @@ export function ProfilePage() {
                   Save Changes
                 </Button>
               </div>
+            ) : (
+              <p className={`${s.savedNote} ${justSaved ? s.savedNoteOn : ''}`} role="status" aria-live="polite">
+                {justSaved && (
+                  <>
+                    <Icon name="check-circle" size={16} />
+                    All changes saved
+                  </>
+                )}
+              </p>
             )}
           </form>
         )
@@ -215,6 +264,8 @@ export function ProfilePage() {
 
       <hr className={s.divider} />
       <NewArrivals />
+
+      <OtpModal request={pendingOtp[0] ?? null} onVerified={onOtpVerified} onCancel={() => setPendingOtp([])} />
 
       <Modal
         open={blocker.state === 'blocked'}
@@ -232,5 +283,14 @@ export function ProfilePage() {
         Your profile edits haven’t been saved yet.
       </Modal>
     </div>
+  );
+}
+
+/** Small green tick inside a field whose value has been verified. */
+function Verified() {
+  return (
+    <span className={s.verified} title="Verified">
+      <Icon name="check-circle" size={16} label="Verified" />
+    </span>
   );
 }

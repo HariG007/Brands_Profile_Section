@@ -19,7 +19,7 @@ export function OrderStatusBadge({ order }: { order: Order }) {
   if (st === 'draft') return <Badge tone="warning">{draftLabel(order.draftSavedAt)}</Badge>;
   if (st === 'mixed') return null;
   const first = order.lineItems[0]?.shipment;
-  return <Badge tone={STATUS_TONE[st]}>{statusHeadline(st, { statusDate: first?.statusDate, estimatedDelivery: first?.estimatedDelivery })}</Badge>;
+  return first ? <Badge tone={STATUS_TONE[st]}>{statusHeadline(first)}</Badge> : null;
 }
 
 export function DetailSkeleton() {

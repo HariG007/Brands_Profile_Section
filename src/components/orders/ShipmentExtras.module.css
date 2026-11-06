@@ -35,6 +35,8 @@
 .itemName { font-weight: var(--font-semibold); font-size: var(--size-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .itemPrice { font-size: var(--size-sm); }
 .returned { font-size: var(--size-xs); color: var(--color-text-secondary); }
+.returnClosed { color: var(--color-icon-neutral-subtle); }
+.muted { font-size: var(--size-sm); color: var(--color-text-secondary); }
 
 @media (max-width: 767px) {
   .bannerText { font-size: 20px; }

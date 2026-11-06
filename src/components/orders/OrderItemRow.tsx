@@ -3,7 +3,7 @@ import type { LineItem } from '@/data/types';
 import { Badge, QtyChip } from '@/components/ui/Badge';
 import { Icon } from '@/components/ui/Icon';
 import { formatRs } from '@/lib/format';
-import { STATUS_LABEL, STATUS_TONE } from '@/lib/status';
+import { returnWindow, STATUS_LABEL, STATUS_TONE } from '@/lib/status';
 import s from './OrderItemRow.module.css';
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 
 export function OrderItemRow({ item, to, plain }: Props) {
   const status = item.shipment?.status;
+  const rw = returnWindow(item);
   const body = (
     <>
       <div className={s.main}>
@@ -37,6 +38,7 @@ export function OrderItemRow({ item, to, plain }: Props) {
             <p className={s.price}>{formatRs(item.price)}</p>
             {status && <Badge tone={STATUS_TONE[status]}>Status: {STATUS_LABEL[status]}</Badge>}
           </div>
+          {rw && <p className={rw.open ? s.returnNote : `${s.returnNote} ${s.returnClosed}`}>{rw.label}</p>}
         </div>
       </div>
       {to && <Icon name="chevron-down" size={16} rotate={-90} className={s.chev} />}

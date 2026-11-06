@@ -29,8 +29,24 @@
   .stack24 { gap: 20px; }
   .actions { position: sticky; bottom: calc(var(--mobile-nav-height) + 8px); background: var(--color-bg-centerstage); padding: 8px 0; z-index: 5; }
   .actionsNote { display: none; }
+  .savedNoteOn { position: sticky; bottom: calc(var(--mobile-nav-height) + 8px); justify-content: center; background: var(--color-bg-centerstage); z-index: 5; }
   .actions > * { flex: 1; }
 }
+/* "All changes saved" — takes the action bar's place briefly, then fades */
+.savedNote {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  min-height: 0;
+  margin: 0;
+  font-size: var(--size-xs);
+  color: var(--color-graphics-success-semibold);
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+.savedNoteOn { opacity: 1; min-height: 36px; padding-top: 4px; }
+.verified { display: inline-flex; flex: none; opacity: 0.9; }
 @keyframes in { from { opacity: 0; transform: translateY(-4px); } }
 
 /* Section tab with a trailing action (e.g. "Add New Address") */

@@ -14,11 +14,16 @@
  * force that state for every request on the page.
  */
 import { addresses, customer, newArrivals, orders } from './mockData';
+import { formatOrderDate } from '@/lib/format';
 import type { Address, Customer, LineItem, Order, Product } from './types';
 
 type Scenario = 'normal' | 'loading' | 'empty' | 'error';
 
 const LATENCY_MS = 450;
+
+export type OtpChannel = 'email' | 'phone';
+/** Mock one-time code accepted by verifyOtp (shown as a hint in the dialog). */
+export const DEMO_OTP = '123456';
 
 function scenario(): Scenario {
   if (typeof window === 'undefined') return 'normal';
@@ -66,6 +71,25 @@ export const accountService = {
     store.customer = { ...store.customer, ...patch };
     notifyChanged();
     return structuredClone(store.customer);
+  },
+
+  /**
+   * Sends a one-time code to a new email or phone before it can be saved.
+   * Live: Shopify Customer Account API verifies email changes itself; phone
+   * changes go through your SMS/OTP provider (e.g. MSG91, Twilio Verify).
+   */
+  async sendOtp(channel: OtpChannel, target: string): Promise<void> {
+    void target;
+    void channel;
+    await mutationDelay(500);
+  },
+
+  /** Mock: the code is always 123456. */
+  async verifyOtp(channel: OtpChannel, target: string, code: string): Promise<void> {
+    void target;
+    void channel;
+    await new Promise((r) => setTimeout(r, 400));
+    if (code !== DEMO_OTP) throw new ServiceError('That code isn’t right. Check it and try again.');
   },
 
   getAddresses(): Promise<Address[]> {
@@ -143,10 +167,26 @@ export const accountService = {
     void findItem(orderId, itemId);
   },
 
-  async initiateReturn(orderId: string, itemId: string): Promise<void> {
-    await new Promise((r) => setTimeout(r, 600));
-    const li = findItem(orderId, itemId);
-    if (li) li.returnRequested = true;
+  /**
+   * Starts a return for a delivered item and schedules the pickup for tomorrow.
+   * Live: returnRequest(input: { orderId, returnLineItems }) on the Customer Account API.
+   */
+  async initiateReturn(orderId: string, itemId: string): Promise<Order | null> {
+    await mutationDelay(600);
+    const order = store.orders.find((o) => o.id === orderId);
+    const li = order?.lineItems.find((l) => l.id === itemId);
+    if (!order || !li?.shipment) throw new ServiceError('This item can’t be returned.');
+    const now = new Date();
+    const pickup = new Date(now);
+    pickup.setDate(pickup.getDate() + 1);
+    const pickupIso = `${pickup.getFullYear()}-${String(pickup.getMonth() + 1).padStart(2, '0')}-${String(pickup.getDate()).padStart(2, '0')}`;
+    li.shipment.status = 'return_in_progress';
+    li.shipment.return = { requestedAt: now.toISOString(), pickupDate: pickupIso, refundAmount: li.price * li.quantity };
+    li.shipment.events.unshift(
+      { id: `${li.id}-rpick-${now.getTime()}`, title: 'PICKUP SCHEDULED', lines: [`Courier will collect it on ${formatOrderDate(pickupIso)}`, 'Keep the item packed with its tags on'], occurredAt: now.toISOString() },
+      { id: `${li.id}-rreq-${now.getTime()}`, title: 'RETURN REQUESTED', lines: ['Return request received'], occurredAt: now.toISOString() },
+    );
+    return structuredClone(order);
   },
 };
 

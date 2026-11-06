@@ -36,6 +36,8 @@ a.plain:hover { box-shadow: none; background: var(--color-graphics-gray-extrasub
   min-width: 0;
 }
 .price { font-size: var(--size-sm); color: var(--color-graphics-black); white-space: nowrap; }
+.returnNote { margin-top: -2px; font-size: var(--size-xs); line-height: var(--line-height-xs); color: var(--color-text-secondary); }
+.returnClosed { color: var(--color-icon-neutral-subtle); }
 .chev { flex-shrink: 0; transition: transform var(--duration-fast) var(--ease-out); }
 .mobileQty { display: none; }
 
