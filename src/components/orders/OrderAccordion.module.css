@@ -34,7 +34,8 @@
 }
 .date { padding-left: 4px; font-size: var(--size-sm); color: var(--color-graphics-black); white-space: pre; }
 
-.thumbs { display: flex; align-items: center; gap: 8px; padding: 0 12px; align-self: stretch; }
+/* Width comes from the row, not the images: the strip shows as many as fit (see useThumbFit). */
+.thumbs { display: flex; align-items: center; gap: 8px; padding: 0 12px; align-self: stretch; flex: 1 1 0; min-width: 0; overflow: hidden; }
 .thumb {
   flex-shrink: 0;
   width: 60px;
@@ -125,6 +126,7 @@
   .draft .header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 4px; }
   .draft .left { grid-column: 1; grid-row: 1; padding-bottom: 0; }
   .draft .thumbs { padding: 0; }
+  .more { font-size: var(--size-sm); }
   .draft .cta { grid-column: 1; grid-row: 2; align-items: flex-start; padding: 0 0 8px 12px; gap: 6px; }
   .draft .link { padding: 0; align-self: flex-start; }
   .draft .toggle { grid-column: 2; grid-row: 1 / span 2; }

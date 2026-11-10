@@ -1,4 +1,4 @@
-import { useId, type MouseEvent } from 'react';
+import { useId, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { Order } from '@/data/types';
 import { Badge } from '@/components/ui/Badge';
@@ -9,6 +9,38 @@ import { OrderItemRow } from './OrderItemRow';
 import s from './OrderAccordion.module.css';
 
 const MAX_THUMBS = 3;
+const THUMB_GAP = 8;
+
+/**
+ * How many thumbnails fit in the strip's current width, leaving room for the
+ * "+N more" label when some are hidden. Re-measures on resize.
+ */
+function useThumbFit(total: number) {
+  const ref = useRef<HTMLDivElement>(null);
+  const moreRef = useRef<HTMLSpanElement>(null);
+  const [fit, setFit] = useState(Math.min(total, MAX_THUMBS));
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      if (el.offsetParent === null) return; // hidden (e.g. normal orders on phones)
+      const cs = getComputedStyle(el);
+      const width = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const thumb = el.querySelector('img')?.offsetWidth || 60;
+      const moreW = (moreRef.current?.offsetWidth || 64) + THUMB_GAP;
+      // Down to 0: when not even one image + label fits, the strip stays empty
+      // (the "View Full Order (N)" link already carries the item count).
+      let k = Math.min(total, MAX_THUMBS);
+      while (k > 0 && k * thumb + (k - 1) * THUMB_GAP + (total > k ? moreW : 0) > width) k--;
+      setFit(k);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [total]);
+  return { ref, moreRef, fit };
+}
 
 interface Props {
   order: Order;
@@ -21,7 +53,8 @@ export function OrderAccordion({ order, open, onToggle }: Props) {
   const navigate = useNavigate();
   const isDraft = order.kind === 'draft';
   const orderUrl = `/account/orders/${order.id}`;
-  const thumbs = order.lineItems.slice(0, MAX_THUMBS);
+  const { ref: thumbsRef, moreRef, fit } = useThumbFit(order.lineItems.length);
+  const thumbs = order.lineItems.slice(0, fit);
   const extra = order.lineItems.length - thumbs.length;
   const chips = orderStatusChips(order);
   // Same count as "Total Products" on the order page (sum of quantities).
@@ -56,11 +89,15 @@ export function OrderAccordion({ order, open, onToggle }: Props) {
               </Link>
             </div>
           )}
-          <div className={s.thumbs} aria-label={`${order.lineItems.length} items`}>
+          <div ref={thumbsRef} className={s.thumbs} aria-label={`${order.lineItems.length} items`}>
             {thumbs.map((li) => (
               <img key={li.id} className={s.thumb} src={li.image} alt="" width={60} height={60} loading="lazy" />
             ))}
-            {extra > 0 && <span className={s.more}>+{extra}more</span>}
+            {extra > 0 && thumbs.length > 0 && (
+              <span ref={moreRef} className={s.more}>
+                +{extra} more
+              </span>
+            )}
           </div>
         </div>
 
