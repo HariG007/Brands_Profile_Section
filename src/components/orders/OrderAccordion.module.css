@@ -31,6 +31,8 @@
   font-size: var(--size-md);
   color: var(--color-graphics-black);
   white-space: nowrap;
+  /* Hug the ID text; don't stretch to the widest line below (date, badges) */
+  align-self: flex-start;
 }
 .date { padding-left: 4px; font-size: var(--size-sm); color: var(--color-graphics-black); white-space: pre; }
 
