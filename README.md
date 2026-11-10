@@ -93,6 +93,15 @@ src/
   pages/
 ```
 
+## Deploy
+
+It's a static single-page app: `npm run build` produces `dist/`. Every route (e.g. `/account/orders/521447`) must serve `index.html`, which the included configs handle:
+
+- **Vercel (recommended):** import the GitHub repo at vercel.com/new. It reads `vercel.json` (build `npm run build`, output `dist`, SPA rewrite). Each push to `main` redeploys; other branches get preview links.
+- **Netlify:** import the repo, build command `npm run build`, publish directory `dist`. `public/_redirects` handles the SPA rewrite.
+
+The site needs HTTPS for "Use current location" (browsers only allow location on secure pages); both hosts give you that.
+
 ## Going live (Shopify)
 
 All data goes through `src/data/accountService.ts`. Each function names the Customer Account API query or mutation that replaces it. The UI types (`src/data/types.ts`) follow that API's shape.
