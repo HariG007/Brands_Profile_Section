@@ -47,3 +47,12 @@
   font-size: 10px;
   white-space: nowrap;
 }
+
+/* Long copy on wide screens, short copy on phones */
+.compact { display: none; }
+@media (max-width: 767px) {
+  .full { display: none; }
+  .compact { display: inline; }
+  /* Last resort on very narrow screens: wrap inside the badge instead of overflowing */
+  .responsive { white-space: normal; height: auto; min-height: 20px; padding-block: 1px; text-align: left; flex-shrink: 1; min-width: 0; }
+}

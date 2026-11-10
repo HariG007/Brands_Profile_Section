@@ -7,7 +7,7 @@ import { DetailHeader } from '@/components/orders/DetailHeader';
 import { OrderInfoRows, OrderSummaryCard } from '@/components/orders/OrderInfo';
 import { OrderItemRow } from '@/components/orders/OrderItemRow';
 import { NewArrivals } from '@/components/product/NewArrivals';
-import { Badge } from '@/components/ui/Badge';
+import { Badge, ResponsiveBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { EmptyState, ErrorState, Panel, SectionTab, Skeleton, Strip } from '@/components/ui/Surface';
 import { useToast } from '@/components/ui/Toast';
@@ -19,7 +19,7 @@ export function OrderStatusBadge({ order }: { order: Order }) {
   if (st === 'draft') return <Badge tone="warning">{draftLabel(order.draftSavedAt)}</Badge>;
   if (st === 'mixed') return null;
   const first = order.lineItems[0]?.shipment;
-  return first ? <Badge tone={STATUS_TONE[st]}>{statusHeadline(first)}</Badge> : null;
+  return first ? <ResponsiveBadge tone={STATUS_TONE[st]} full={statusHeadline(first)} compact={statusHeadline(first, true)} /> : null;
 }
 
 export function DetailSkeleton() {

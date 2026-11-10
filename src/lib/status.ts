@@ -38,12 +38,18 @@ export function overallStatus(order: Order): OverallStatus {
 }
 
 /** Badge copy for "Overall Shipment Info" / "Order Info", e.g. "Delivered (30 Jun, 2025)". */
-export function statusHeadline(sh: Pick<Shipment, 'status' | 'statusDate' | 'estimatedDelivery' | 'return'>): string {
+/** `compact` swaps long phrases for short ones (e.g. "EDD") so the badge fits a phone-width strip. */
+export function statusHeadline(
+  sh: Pick<Shipment, 'status' | 'statusDate' | 'estimatedDelivery' | 'return'>,
+  compact = false,
+): string {
   const label = STATUS_LABEL[sh.status];
   switch (sh.status) {
     case 'packed':
     case 'in_transit':
-      return sh.estimatedDelivery ? `${label} (Estimated Date of Delivery: ${formatEta(sh.estimatedDelivery)})` : label;
+      return sh.estimatedDelivery
+        ? `${label} (${compact ? 'EDD' : 'Estimated Date of Delivery'}: ${formatEta(sh.estimatedDelivery)})`
+        : label;
     case 'out_for_delivery':
       return `${label} (Arriving today)`;
     case 'return_in_progress':

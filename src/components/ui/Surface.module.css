@@ -32,6 +32,10 @@
   min-width: 0;
 }
 .strip > :first-child { white-space: nowrap; }
+/* Phones: if a long status badge can't sit beside the label, it drops onto its own line */
+@media (max-width: 767px) {
+  .strip { flex-wrap: wrap; row-gap: 8px; }
+}
 
 .divider {
   height: 0;

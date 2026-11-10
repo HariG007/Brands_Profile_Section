@@ -11,7 +11,7 @@ import { OrderInfoRows } from '@/components/orders/OrderInfo';
 import { RatingStars, shipmentStyles as x, StatusBanner } from '@/components/orders/ShipmentExtras';
 import { Timeline } from '@/components/orders/Timeline';
 import { NewArrivals } from '@/components/product/NewArrivals';
-import { Badge, QtyChip } from '@/components/ui/Badge';
+import { QtyChip, ResponsiveBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { EmptyState, ErrorState, Panel, SectionTab, Strip } from '@/components/ui/Surface';
@@ -239,7 +239,7 @@ export function ShipmentPage() {
           <div className={s.stack}>
             <Strip>
               <span>Order Info</span>
-              <Badge tone={STATUS_TONE[sh.status]}>{statusHeadline(sh)}</Badge>
+              <ResponsiveBadge tone={STATUS_TONE[sh.status]} full={statusHeadline(sh)} compact={statusHeadline(sh, true)} />
             </Strip>
             <OrderInfoRows order={order} />
             <Strip>
