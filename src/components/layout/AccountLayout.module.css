@@ -165,7 +165,9 @@
     flex-shrink: 0;
   }
   .sheetOpen .bar { box-shadow: 0 -1px 0 var(--color-graphics-gray-subtle); }
-  .sheetList { display: flex; flex-direction: column; gap: 12px; }
+  /* One joined list: no gaps between rows, subtle hairline dividers */
+  .sheetList { display: flex; flex-direction: column; gap: 0; background: var(--color-bg-neutral); border-radius: var(--radius-sm); overflow: hidden; }
+  .sheetList > .navItem + .navItem { border-top: 1px solid var(--color-graphics-gray-subtle); }
   /* 48px rows: comfortable thumb targets */
   .sheet .navItem { height: 48px; padding: 14px 16px; }
   .utilityRow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
