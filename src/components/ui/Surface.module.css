@@ -124,6 +124,14 @@
 @media (max-width: 767px) {
   .title:has(.titleCount) { font-size: 18px; }
   .titleCount { margin-left: 6px; }
-  .sectionTitle { gap: 6px; min-width: 0; }
+  .sectionTitle { gap: 6px; min-width: 0; flex: 1 1 auto; }
+  /* Very small phones: let the title wrap rather than slide under the filter.
+     The pill is a plain inline box so it stays attached to the last word. */
+  .title:has(.titleCount) { display: block; white-space: normal; line-height: 24px; }
+  .titleCount { display: inline; padding: 2px 7px; line-height: 20px; vertical-align: 2px; }
+}
+@media (max-width: 359px) {
+  .title:has(.titleCount) { font-size: 16px; }
+  .titleCount { margin-left: 4px; padding: 2px 6px; }
   .sectionTitle > img { width: 20px !important; height: 20px !important; }
 }

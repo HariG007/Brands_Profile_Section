@@ -77,8 +77,22 @@
   .menu { min-width: 220px; }
   .option { min-height: 44px; }
 }
-/* Small phones: icon-only trigger so the title + count stay on one line */
-@media (max-width: 379px) {
-  .triggerLabel { display: none; }
-  .trigger { padding: 0 8px; gap: 4px; }
+/* Phones: square icon-only trigger, so the header never runs out of room.
+   The active filter's name is shown in the "Showing X of Y · …" line below,
+   and a small red dot on the icon marks that a filter is on. */
+.dot { display: none; }
+@media (max-width: 767px) {
+  .trigger { position: relative; width: 36px; padding: 0; justify-content: center; gap: 0; }
+  .triggerLabel, .chev { display: none; }
+  .dot {
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-brand);
+    box-shadow: 0 0 0 2px var(--color-bg-danger-subtle);
+  }
 }

@@ -92,6 +92,7 @@ export function FilterMenu<T extends string>({ value, options, onChange, label, 
         <Icon name="filter" size={16} />
         <span className={s.triggerLabel}>{current.label}</span>
         <Icon name="chevron-down" size={16} className={s.chev} />
+        {filtered && <span className={s.dot} aria-hidden />}
       </button>
       {open && (
         <ul className={s.menu} role="listbox" id={listId} aria-label={label}>
