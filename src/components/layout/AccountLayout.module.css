@@ -183,7 +183,9 @@
     white-space: nowrap;
   }
   .sheetBack:hover { text-decoration: underline; text-underline-offset: 3px; }
-  .sheet .logoutCompact { height: 44px; width: auto; padding: 12px 16px; }
+  /* Plain text action, like "Back to Shopping": no white container */
+  .sheet .logoutCompact { height: 44px; width: auto; padding: 12px 16px; background: none; box-shadow: none; }
+  .sheet .logoutCompact:hover { background: none; text-decoration: underline; text-underline-offset: 3px; }
   .sheet .divider { border: 0; border-top: 1px solid var(--color-graphics-gray-subtle); margin: 0; }
 }
 @keyframes fade { from { opacity: 0; } }
