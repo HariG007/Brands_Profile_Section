@@ -34,7 +34,7 @@ export function OrderItemRow({ item, to, plain }: Props) {
           <span className={s.mobileQty}>
             <QtyChip quantity={item.quantity} />
           </span>
-          <div className={s.line}>
+          <div className={`${s.line} ${s.priceLine}`}>
             <p className={s.price}>{formatRs(item.price)}</p>
             {status && <Badge tone={STATUS_TONE[status]}>Status: {STATUS_LABEL[status]}</Badge>}
           </div>

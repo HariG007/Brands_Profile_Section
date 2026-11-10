@@ -47,5 +47,7 @@ a.plain:hover { box-shadow: none; background: var(--color-graphics-gray-extrasub
   .desktopQty { display: none; }
   .mobileQty { display: inline-flex; align-self: flex-start; }
   .info { gap: 8px; }
+  /* Status badge sits under the price on phones, so it never runs into the chevron */
+  .priceLine { flex-direction: column; align-items: flex-start; gap: 6px; }
   .name { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 }
